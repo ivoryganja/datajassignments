@@ -1,0 +1,43 @@
+#call up two external libraries, "requests" and "mechanize"
+import requests, mechanize
+#bring in the tool "BeautifulSoup" from bs4's external library 
+from bs4 import BeautifulSoup
+
+#create a URL variable, assign the BoCo website to the variable 
+url = 'https://report.boonecountymo.org/mrcjava/servlet/SH01_MP.I00290s?max_rows=500'
+
+#create a br variable, mechanize uses browser method  
+br = mechanize.Browser()
+#open the URL variable 
+br.open(url)
+#response and read the URL, name it html 
+html = br.response().read()
+
+#create soup variable, the result of using beautiful soup to parse the html variable 
+soup = BeautifulSoup(html, "html.parser")
+
+#create main_table variable using method find over two parts of the html from the boone county website 
+main_table = soup.find('tbody',
+    {'id': 'mrc_main_table'}
+)
+
+#create a variable called row_list using find_all within the main_table variable 
+row_list = main_table.find_all('tr')
+
+#runs a loop over row_list 
+for r in row_list:
+
+   #create a cell_list variable by using find_all method over object r 
+    cell_list = r.find_all('td')
+
+   #look for length of cell_list greater than 0, see if there is data there 
+    if len(cell_list) > 0:
+        #for every letter in the cell_list, print a stripped version of the text 
+        for c in cell_list:
+            print c.text.strip()
+
+        #printing, you know
+        print '----------'
+
+#well dang u did it, way to be 
+print 'IT WORKED!'
